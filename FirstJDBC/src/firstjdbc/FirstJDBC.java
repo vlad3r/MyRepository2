@@ -12,9 +12,9 @@ import java.io.*;
  * @author Vlad
  */
 
-class DataBase{
+class DML{
 public Connection con;
-public DataBase(){
+public DML(){
 try{
 con=DriverManager.getConnection("jdbc:postgresql://localhost:5432/MyDB","postgres","1234");
         Statement statement = con.createStatement();
@@ -22,19 +22,7 @@ System.out.println("Good");
 }
 catch(Exception e){}
 }
-public void show(){
-try{PreparedStatement query=con.prepareStatement("Select * from journal order by 1");
-            ResultSet result=query.executeQuery();
-            
-            while(result.next()){
-            System.out.println(result.getInt(1)+" "+result.getString(2)+" "+result.getShort(3)+" "+result.getShort(4)+" "+result.getShort(5));
-            //result.next();
-            }
-            result.close();}
-catch(Exception ex){
-System.out.println(ex);
-}
-}
+
 public void insert(String name,short value1,short value2,short value3){
 try{PreparedStatement query=con.prepareStatement("Insert into journal(name,valueRus,valueMath,valuePhysics) values (?,?,?,?)");
       query.setString(1, name);
@@ -67,9 +55,22 @@ updateQuery.executeUpdate();}
   }
 
 }}
-class DataBaseFind extends DataBase{
-public DataBaseFind(){
+class DQL extends DML{
+public DQL(){
 super();
+}
+public void show(){
+try{PreparedStatement query=con.prepareStatement("Select * from journal order by 1");
+            ResultSet result=query.executeQuery();
+            
+            while(result.next()){
+            System.out.println(result.getInt(1)+" "+result.getString(2)+" "+result.getShort(3)+" "+result.getShort(4)+" "+result.getShort(5));
+            //result.next();
+            }
+            result.close();}
+catch(Exception ex){
+System.out.println(ex);
+}
 }
 public void show (String name){
 try{PreparedStatement query=con.prepareStatement("Select * from journal where name='"+name+"' order by 1");
@@ -105,7 +106,7 @@ public static String getString() throws Exception{
     public static void main(String[] args) throws Exception// throws SQLException 
     {
         // TODO code application logic here
-        DataBaseFind db=new DataBaseFind();
+        DQL db=new DQL();
         
         
         for (;;){
